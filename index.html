@@ -1,32 +1,340 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <title>games</title>
-    <link rel="shortcut icon" href="https://twoyears666.github.io/game/games.ico">
-    <link rel="apple-touch-icon" href="https://twoyears666.github.io/game/games.ico">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <style>
-	.titlebar {
-  	border: 2px outset grey;
-  	background-color: white; 
-	}
-	</style>
-</head>
-<body >
-    <div class="titlebar">
-		<img src="https://twoyears666.github.io/game/ios.png" alt="404" width="50" height="50">
-    	<h1>2年小游戏网站</h1>
-    </div>
-    <h2>mc:</h2>
-    <a href="https://twoyears666.github.io/game/mc1.12.html" style ="color:rgb(33, 141, 125)">1.12-can't change language-无汉化</a><br>
-    <a href="https://twoyears666.github.io/game/mc1.8.8.html" style ="color:rgb(33, 141, 125)">1.8.8-can change language-有汉化</a><br>
-    <a href="https://twoyears666.github.io/game/mc1.5.2.html" style ="color:rgb(33, 141, 125)">1.5.2-can't change language-无汉化</a><br>
-	<h2>其他</h2>
-    <a href="https://twoyears666.github.io/snowrider3D" style ="color:rgb(33, 141, 125)">snowrider3D</a><br>
-    <h2>requied vpn in school</h2>
-    <a href="https://www.crazygames.com/game/stickman-clash" style ="color:rgb(33, 141, 125)">stickman clash(1,2,3player)</a><br>
-    <h2>test part</h2>
-    <img src="https://twoyears666.github.io/game/ios.png" alt="404" width="50" height="50">
-</body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>带派游戏</title>
+<!-- PWA 配置 -->
+<meta name="theme-color" content="#121212">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="带派游戏">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="https://twoyears666.github.io/game/ios.png">
+<style>
+/* --- 基础重置 --- */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #121212; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; }
 
+/* --- 导航栏 --- */
+.navbar { height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background-color: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+.nav-left { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; }
+.nav-right { display: flex; gap: 15px; }
+.nav-right a, .nav-right .login-btn { color: #aaa; text-decoration: none; font-size: 0.9rem; padding: 6px 12px; border-radius: 8px; transition: all 0.2s; cursor: pointer; border: none; background: transparent; }
+.nav-right a:hover, .nav-right .login-btn:hover { background: #333; color: #fff; }
+
+/* --- 主内容区 --- */
+.main-content { 
+  flex: 1; 
+  padding: 30px; 
+  padding-bottom: env(safe-area-inset-bottom); 
+  overflow-x: auto; 
+}
+
+/* --- 网格布局 --- */
+.grid { 
+  display: flex; 
+  flex-wrap: nowrap; 
+  gap: 30px; 
+  justify-content: flex-start; 
+  align-items: center; 
+  width: max-content; 
+}
+
+/* --- 卡片样式 --- */
+.card { 
+  width: 220px; 
+  aspect-ratio: 1 / 1; 
+  border-radius: 30px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  text-decoration: none; 
+  color: white; 
+  transition: transform 0.2s; 
+  position: relative; 
+  overflow: hidden; 
+  background-color: #1e1e1e; 
+  border: 1px solid #333; 
+  flex-shrink: 0; 
+  cursor: pointer;
+}
+.card:active { transform: scale(0.96); }
+
+/* --- 图片背景 --- */
+.card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 0; }
+
+/* --- 遮罩层 --- */
+.card-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); z-index: 1; }
+
+/* --- 文字内容 --- */
+.card-content { position: relative; z-index: 2; text-align: center; width: 90%; pointer-events: none; }
+.card-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.card-desc { font-size: 0.9rem; color: #ddd; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+
+/* --- 添加按钮 --- */
+.add-card { background: #1e1e1e; border: 2px dashed #444; }
+.add-icon { font-size: 60px; color: #666; margin-bottom: 15px; font-weight: 300; }
+.add-text { font-size: 1.1rem; color: #888; }
+
+/* --- 登录弹窗 --- */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
+.modal-content { background-color: #1e1e1e; padding: 40px; border-radius: 20px; text-align: center; max-width: 80%; border: 1px solid #333; }
+.modal-title { font-size: 1.5rem; margin-bottom: 10px; font-weight: bold; }
+.modal-desc { color: #999; font-size: 0.9rem; }
+
+/* --- 游戏库菜单 --- */
+.dropdown-menu {
+  display: none; 
+  width: 320px;
+  height: 220px; 
+  background-color: #2a2a2a;
+  border-radius: 15px;
+  border: 1px solid #444;
+  padding: 20px;
+  overflow-y: auto;
+  flex-shrink: 0; 
+  animation: fadeIn 0.3s ease;
+}
+
+.dropdown-menu a {
+  color: #ffffff !important;
+  text-decoration: none;
+  display: block;
+  padding: 12px 15px;
+  margin: 5px 0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  text-align: left;
+  transition: 0.2s;
+}
+
+.dropdown-menu a:hover { background-color: #444; }
+.dropdown-menu h2 { margin: 15px 0 10px 0; color: #fff; font-size: 1.1rem; font-weight: 600; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- 新增：添加游戏弹窗样式 --- */
+.add-modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8); /* 黑色半透明背景 */
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+}
+
+.add-modal-content {
+  background-color: #1e1e1e; /* 黑色背景 */
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  border: 1px solid #333;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.add-modal-title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.form-group { margin-bottom: 15px; }
+
+.form-input {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus { border-color: #555; }
+
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.btn-submit:hover { background-color: #ddd; }
+
+@media (max-width: 600px) { 
+  .card { width: 180px; } 
+  .dropdown-menu { width: 260px; height: 180px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="navbar">
+  <div class="nav-left">带派游戏</div>
+  <div class="nav-right">
+    <a href="#">主界面</a>
+    <a href="https://github.com/twoyears666/gamehub-unoffical-html/tree/main" target="_blank">GitHub</a>
+    <button class="login-btn" onclick="handleLoginClick()">登录</button>
+  </div>
+</nav>
+
+<!-- 主内容 -->
+<main class="main-content">
+  <div class="grid" id="gameGrid">
+
+    <!-- 游戏库卡片 -->
+    <div class="card" onclick="toggleDropdown(this)">
+      <div class="card-bg" style="background-image: url('https://twoyears666.github.io/game/ios.png');"></div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-title">游戏库</div>
+        <div class="card-desc">点击展开列表</div>
+      </div>
+    </div>
+
+    <!-- 游戏库菜单 -->
+    <div class="dropdown-menu">
+      <a href="https://twoyears666.github.io/game/mc1.12.html">1.12-can't change language-无汉化</a>
+      <a href="https://twoyears666.github.io/game/mc1.8.8.html">1.8.8-can change language-有汉化</a>
+      <a href="https://twoyears666.github.io/game/mc1.5.2.html">1.5.2-can't change language-无汉化</a>
+      <h2>其他</h2>
+      <a href="https://twoyears666.github.io/snowrider3D">snowrider3D</a>
+    </div>
+
+    <!-- 添加按钮 -->
+    <div class="card add-card" onclick="openAddModal()">
+      <div class="add-icon">+</div>
+      <div class="add-text">添加游戏</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- 登录弹窗 -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-title">Try again later</div>
+    <div class="modal-desc">请稍后再试</div>
+  </div>
+</div>
+
+<!-- 新增：添加游戏弹窗 -->
+<div id="addModal" class="add-modal">
+  <div class="add-modal-content">
+    <div class="add-modal-title">添加新游戏</div>
+    <div class="form-group">
+      <input type="text" id="inputName" class="form-input" placeholder="游戏名称">
+    </div>
+    <div class="form-group">
+      <input type="text" id="inputImg" class="form-input" placeholder="图片链接 (https://...)">
+    </div>
+    <div class="form-group">
+      <input type="text" id="inputUrl" class="form-input" placeholder="网页链接 (https://...)">
+    </div>
+    <div class="form-group">
+      <input type="text" id="inputDesc" class="form-input" placeholder="描述">
+    </div>
+    <button class="btn-submit" onclick="confirmAddGame()">确认添加</button>
+  </div>
+</div>
+
+<script>
+// 登录逻辑
+let firstClickTime = null;
+function handleLoginClick() {
+  const modal = document.getElementById('loginModal');
+  modal.style.display = 'flex';
+  if (firstClickTime && new Date().getTime() - firstClickTime < 10000) {
+    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  } else {
+    firstClickTime = new Date().getTime();
+    setTimeout(() => { firstClickTime = null; }, 10000);
+  }
+}
+window.onclick = function(event) {
+  const loginModal = document.getElementById('loginModal');
+  const addModal = document.getElementById('addModal');
+  if (event.target == loginModal) loginModal.style.display = "none";
+  if (event.target == addModal) addModal.style.display = "none";
+}
+
+// 打开添加弹窗
+function openAddModal() {
+  document.getElementById('addModal').style.display = 'flex';
+  document.getElementById('inputName').focus();
+}
+
+// 确认添加游戏
+function confirmAddGame() {
+  const name = document.getElementById('inputName').value;
+  const imgUrl = document.getElementById('inputImg').value;
+  const url = document.getElementById('inputUrl').value;
+  const desc = document.getElementById('inputDesc').value;
+
+  if (!name || !url) {
+    alert("请填写游戏名称和网页链接");
+    return;
+  }
+
+  const grid = document.getElementById('gameGrid');
+  const newLink = document.createElement('a');
+  newLink.className = 'card';
+  newLink.href = url;
+  newLink.target = '_blank';
+  
+  let bgStyle = imgUrl ? `background-image: url('${imgUrl}');` : 'background: linear-gradient(135deg, #333, #111);';
+  
+  newLink.innerHTML = ` 
+    <div class="card-bg" style="${bgStyle}"></div> 
+    <div class="card-overlay"></div> 
+    <div class="card-content"> 
+      <div class="card-title">${name}</div> 
+      <div class="card-desc">${desc || '点击启动'}</div> 
+    </div> `;
+    
+  grid.insertBefore(newLink, grid.lastElementChild);
+  
+  // 关闭弹窗并清空输入
+  document.getElementById('addModal').style.display = 'none';
+  document.getElementById('inputName').value = '';
+  document.getElementById('inputImg').value = '';
+  document.getElementById('inputUrl').value = '';
+  document.getElementById('inputDesc').value = '';
+}
+
+// 游戏库菜单切换
+function toggleDropdown(cardElement) {
+  const grid = document.getElementById('gameGrid');
+  const menu = grid.querySelector('.dropdown-menu');
+  
+  if (menu.style.display === 'inline-block') {
+    menu.style.display = 'none';
+  } else {
+    menu.style.display = 'inline-block';
+  }
+}
+</script>
+
+</body>
 </html>
