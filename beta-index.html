@@ -72,30 +72,46 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 .card-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 .card-desc { font-size: 0.9rem; color: #ddd; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-/* --- 删除按钮样式 --- */
-.delete-btn {
+/* --- 卡片右上角按钮组 (删除 + 跳转) --- */
+.card-actions {
   position: absolute;
   top: 10px;
   right: 10px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: auto;
+}
+/* 移动端始终显示按钮 */
+@media (max-width: 600px) {
+  .card-actions { opacity: 1; }
+}
+.card:hover .card-actions { opacity: 1; }
+
+.action-btn {
   width: 30px;
   height: 30px;
-  background-color: rgba(255, 50, 50, 0.8);
-  color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
-  z-index: 10;
-  opacity: 0; /* 默认隐藏 */
-  transition: opacity 0.2s;
-  pointer-events: auto; /* 允许点击 */
   cursor: pointer;
+  transition: transform 0.2s;
+  color: white;
+  text-decoration: none; /* 针对跳转链接 */
 }
-.card:hover .delete-btn {
-  opacity: 1; /* 悬停时显示 */
-}
+.action-btn:active { transform: scale(0.9); }
+
+.delete-btn { background-color: rgba(255, 50, 50, 0.8); }
+.delete-btn:hover { background-color: rgba(255, 0, 0, 1); }
+
+.link-btn { background-color: rgba(50, 50, 255, 0.8); }
+.link-btn:hover { background-color: rgba(0, 0, 255, 1); }
+
 
 /* --- 添加按钮 --- */
 .add-card { background: #1e1e1e; border: 2px dashed #444; }
@@ -121,7 +137,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
   flex-shrink: 0; 
   animation: fadeIn 0.3s ease;
 }
-
 .dropdown-menu a {
   color: #ffffff !important;
   text-decoration: none;
@@ -133,7 +148,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
   text-align: left;
   transition: 0.2s;
 }
-
 .dropdown-menu a:hover { background-color: #444; }
 .dropdown-menu h2 { margin: 15px 0 10px 0; color: #fff; font-size: 1.1rem; font-weight: 600; }
 
@@ -142,7 +156,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* --- 添加游戏弹窗样式 --- */
+/* --- 添加游戏弹窗 --- */
 .add-modal {
   display: none;
   position: fixed;
@@ -156,7 +170,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
   align-items: center;
   backdrop-filter: blur(5px);
 }
-
 .add-modal-content {
   background-color: #1e1e1e;
   padding: 30px;
@@ -167,43 +180,32 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   position: relative;
 }
-
-/* --- 修改：醒目的关闭按钮 --- */
 .close-btn {
   position: absolute;
-  top: 25px; /* 与标题垂直对齐 */
+  top: 25px;
   right: 25px;
-  width: 40px; /* 更大的尺寸 */
+  width: 40px;
   height: 40px;
-  background-color: #ff4444; /* 醒目的红色背景 */
+  background-color: #ff4444;
   color: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem; /* 更大的叉号 */
+  font-size: 1.8rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(255, 68, 68, 0.4); /* 红色光晕 */
+  box-shadow: 0 4px 10px rgba(255, 68, 68, 0.4);
   line-height: 1;
 }
-
 .close-btn:hover {
-  background-color: #cc0000; /* 悬停时变深红 */
-  transform: scale(1.1); /* 悬停时放大 */
+  background-color: #cc0000;
+  transform: scale(1.1);
   box-shadow: 0 6px 15px rgba(255, 68, 68, 0.6);
 }
-
-.add-modal-title {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: #fff;
-  text-align: center;
-}
-
+.add-modal-title { font-size: 1.5rem; margin-bottom: 20px; color: #fff; text-align: center; }
 .form-group { margin-bottom: 15px; }
-
 .form-input {
   width: 100%;
   padding: 12px 15px;
@@ -215,9 +217,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
   outline: none;
   transition: border-color 0.2s;
 }
-
 .form-input:focus { border-color: #555; }
-
 .btn-submit {
   width: 100%;
   padding: 15px;
@@ -231,14 +231,73 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
   margin-top: 10px;
   transition: background 0.2s;
 }
-
 .btn-submit:hover { background-color: #ddd; }
 
-@media (max-width: 600px) { 
-  .card { width: 180px; } 
-  .dropdown-menu { width: 260px; height: 180px; }
-  .delete-btn { opacity: 1; } /* 手机端始终显示删除按钮 */
+/* --- 游戏全屏弹窗 --- */
+.game-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999; /* 最高层级 */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  flex-direction: column;
 }
+
+.game-header {
+  height: 50px;
+  background-color: #1e1e1e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+
+.game-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.close-game-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.game-iframe-container {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.game-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* 加载动画 */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #666;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
 </style>
 </head>
 <body>
@@ -296,9 +355,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 <!-- 添加游戏弹窗 -->
 <div id="addModal" class="add-modal">
   <div class="add-modal-content">
-    <!-- 醒目的关闭按钮 -->
     <div class="close-btn" onclick="closeAddModal()">×</div>
-    
     <div class="add-modal-title">添加新游戏</div>
     <div class="form-group">
       <input type="text" id="inputName" class="form-input" placeholder="游戏名称">
@@ -313,6 +370,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
       <input type="text" id="inputDesc" class="form-input" placeholder="描述">
     </div>
     <button class="btn-submit" onclick="confirmAddGame()">确认添加</button>
+  </div>
+</div>
+
+<!-- 游戏全屏弹窗 -->
+<div id="gameModal" class="game-modal">
+  <div class="game-header">
+    <div class="game-title" id="currentGameTitle">游戏中</div>
+    <button class="close-game-btn" onclick="closeGameModal()">×</button>
+  </div>
+  <div class="game-iframe-container">
+    <div class="loading-spinner">正在加载游戏资源...</div>
+    <iframe id="gameFrame" class="game-iframe" src="" allowfullscreen></iframe>
   </div>
 </div>
 
@@ -365,7 +434,7 @@ function toggleDropdown(cardElement) {
 // 删除游戏
 function deleteGame(btn, name) {
   if(confirm(`确定要删除 "${name}" 吗？`)) {
-    const card = btn.parentElement;
+    const card = btn.closest('.card');
     card.remove();
     let games = JSON.parse(localStorage.getItem('myGames') || '[]');
     games = games.filter(game => game.name !== name);
@@ -389,7 +458,7 @@ function confirmAddGame() {
   saveGameToLocal(gameData);
   createGameCard(gameData);
   
-  // 🔥 关键：添加成功后立即缓存
+  // 🔥 添加成功后立即后台缓存
   precacheUrl(url);
   
   closeAddModal();
@@ -402,62 +471,14 @@ function confirmAddGame() {
 // 创建卡片DOM元素
 function createGameCard(data) {
   const grid = document.getElementById('gameGrid');
-  const newLink = document.createElement('a');
-  newLink.className = 'card';
-  newLink.href = 'javascript:void(0);'; 
-  newLink.onclick = function(e) {
-    e.preventDefault();
-    window.location.href = data.url;
-  };
+  const newCard = document.createElement('div'); // 改为 div，因为点击事件要分开处理
+  newCard.className = 'card';
   
   let bgStyle = data.img ? `background-image: url('${data.img}');` : 'background: linear-gradient(135deg, #333, #111);';
   
-  newLink.innerHTML = ` 
-    <div class="delete-btn" onclick="deleteGame(this, '${data.name}')">×</div>
-    <div class="card-bg" style="${bgStyle}"></div> 
-    <div class="card-overlay"></div> 
-    <div class="card-content"> 
-      <div class="card-title">${data.name}</div> 
-      <div class="card-desc">${data.desc || '点击启动'}</div> 
-    </div> `;
-    
-  grid.insertBefore(newLink, grid.lastElementChild);
-}
-
-// 保存到 LocalStorage
-function saveGameToLocal(game) {
-  let games = JSON.parse(localStorage.getItem('myGames') || '[]');
-  games.push(game);
-  localStorage.setItem('myGames', JSON.stringify(games));
-}
-
-// 从 LocalStorage 读取并渲染
-function loadLocalGames() {
-  let games = JSON.parse(localStorage.getItem('myGames') || '[]');
-  games.forEach(game => {
-    createGameCard(game);
-    // 🔥 加载时也缓存一遍
-    precacheUrl(game.url);
-  });
-}
-
-// 🔥 核心缓存函数
-function precacheUrl(url) {
-  if (!url) return;
-  fetch(url, { method: 'GET', mode: 'no-cors' })
-    .then(() => console.log('✅ 已缓存:', url))
-    .catch(() => console.log('ℹ️ 离线或已缓存:', url));
-}
-
-// 🔥 页面加载时预加载下拉菜单里的所有链接
-window.addEventListener('load', () => {
-  const menuLinks = document.querySelectorAll('.dropdown-menu a');
-  menuLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href) precacheUrl(href);
-  });
-});
-</script>
-
-</body>
-</html>
+  // 卡片内部结构：按钮组 + 背景 + 遮罩 + 文字
+  // 注意：onclick 事件绑定在最外层，但按钮上有 stopPropagation
+  newCard.innerHTML = ` 
+    <div class="card-actions">
+      <div class="action-btn delete-btn" onclick="deleteGame(this, '${data.name}')">×</div>
+      <a href="${data.url}" target="_blank" class="action-btn link-btn" onclick
