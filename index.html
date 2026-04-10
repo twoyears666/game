@@ -72,6 +72,31 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 .card-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 .card-desc { font-size: 0.9rem; color: #ddd; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
+/* --- 删除按钮样式 --- */
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 50, 50, 0.8);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  z-index: 10;
+  opacity: 0; /* 默认隐藏 */
+  transition: opacity 0.2s;
+  pointer-events: auto; /* 允许点击 */
+  cursor: pointer;
+}
+.card:hover .delete-btn {
+  opacity: 1; /* 悬停时显示 */
+}
+
 /* --- 添加按钮 --- */
 .add-card { background: #1e1e1e; border: 2px dashed #444; }
 .add-icon { font-size: 60px; color: #666; margin-bottom: 15px; font-weight: 300; }
@@ -184,6 +209,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 @media (max-width: 600px) { 
   .card { width: 180px; } 
   .dropdown-menu { width: 260px; height: 180px; }
+  .delete-btn { opacity: 1; } /* 手机端始终显示删除按钮 */
 }
 </style>
 </head>
@@ -324,7 +350,7 @@ function confirmAddGame() {
   document.getElementById('inputDesc').value = '';
 }
 
-// 创建卡片DOM元素
+// 创建卡片DOM元素（加入删除按钮）
 function createGameCard(data) {
   const grid = document.getElementById('gameGrid');
   const newLink = document.createElement('a');
@@ -334,7 +360,9 @@ function createGameCard(data) {
   
   let bgStyle = data.img ? `background-image: url('${data.img}');` : 'background: linear-gradient(135deg, #333, #111);';
   
+  // 增加删除按钮，点击时触发删除，并阻止跳转
   newLink.innerHTML = ` 
+    <div class="delete-btn" onclick="deleteGame(this, '${data.name}')">×</div>
     <div class="card-bg" style="${bgStyle}"></div> 
     <div class="card-overlay"></div> 
     <div class="card-content"> 
@@ -344,6 +372,20 @@ function createGameCard(data) {
     
   // 插入到添加按钮之前
   grid.insertBefore(newLink, grid.lastElementChild);
+}
+
+// 删除游戏
+function deleteGame(btn, name) {
+  if(confirm(`确定要删除 "${name}" 吗？`)) {
+    // 1. 移除界面元素
+    const card = btn.parentElement;
+    card.remove();
+    
+    // 2. 从本地存储移除
+    let games = JSON.parse(localStorage.getItem('myGames') || '[]');
+    games = games.filter(game => game.name !== name); // 过滤掉被删除的游戏
+    localStorage.setItem('myGames', JSON.stringify(games));
+  }
 }
 
 // 保存到 LocalStorage
