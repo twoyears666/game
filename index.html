@@ -165,29 +165,34 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
   max-width: 400px;
   border: 1px solid #333;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  position: relative; /* 为关闭按钮定位 */
+  position: relative;
 }
 
-/* --- 新增：弹窗关闭按钮样式 --- */
+/* --- 修改：醒目的关闭按钮 --- */
 .close-btn {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 30px;
-  height: 30px;
-  background-color: #333;
+  top: 25px; /* 与标题垂直对齐 */
+  right: 25px;
+  width: 40px; /* 更大的尺寸 */
+  height: 40px;
+  background-color: #ff4444; /* 醒目的红色背景 */
   color: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.8rem; /* 更大的叉号 */
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(255, 68, 68, 0.4); /* 红色光晕 */
+  line-height: 1;
 }
+
 .close-btn:hover {
-  background-color: #ff4444;
+  background-color: #cc0000; /* 悬停时变深红 */
+  transform: scale(1.1); /* 悬停时放大 */
+  box-shadow: 0 6px 15px rgba(255, 68, 68, 0.6);
 }
 
 .add-modal-title {
@@ -291,7 +296,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 <!-- 添加游戏弹窗 -->
 <div id="addModal" class="add-modal">
   <div class="add-modal-content">
-    <!-- 新增：关闭按钮 -->
+    <!-- 醒目的关闭按钮 -->
     <div class="close-btn" onclick="closeAddModal()">×</div>
     
     <div class="add-modal-title">添加新游戏</div>
